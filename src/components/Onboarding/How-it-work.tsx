@@ -32,7 +32,7 @@ const HowEcommerceWork = () => {
             </div>
 
             {/* Tab Content */}
-            <div className="w-2/3 h-[400px] text-center">
+            <div className="w-2/3 h-[350px] text-center">
                 {tabs === 'users' && (
                     <div className="flex w-full h-full">
                         <img src="../../../public/users.png" className="w-1/2 h-1/2 rounded-lg"/>
