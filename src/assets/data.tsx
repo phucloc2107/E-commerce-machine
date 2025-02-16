@@ -1,148 +1,104 @@
 const listItems = [
     {
         id: 1,
-        name: 'Service',
+        name: 'Bánh mì PAte cột đền bla bla bla chấm chám',
         img: '../../public/services.png',
         itemName: 'cleaning on request',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$1998',
-        far: '1610.5'
+        type: 'Shop Online',
+        far: '1610.5',
+        rate: 'yes'
     },
     {
         id: 2,
-        name: 'Service',
+        name: 'Coffee',
         img: '../../public/services.png',
         itemName: 'cleaning on request',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$375',
-        far: '1610.7'
+        type: 'Shop Online',
+        far: '1610.7',
+        rate: ''
     },
     {
         id: 3,
-        name: 'Product',
+        name: 'Pizza',
         img: '../../public/products.jpg',
         itemName: 'products on demand',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$75',
-        far: '1610.5'
+        type: 'Coffee',
+        far: '1610.5',
+        rate: 'yes'
     },
     {
         id: 4,
-        name: 'Service',
+        name: 'Sausage',
         img: '../../public/services.png',
         itemName: 'cleaning on request',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$375',
-        far: '1610.7'
+        type: 'Bistro',
+        far: '1610.7',
+        rate: ''
     },
     {
         id: 5,
-        name: 'Product',
+        name: 'Chè thái',
         img: '../../public/products.jpg',
         itemName: 'products on demand',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$21',
-        far: '1610.5'
+        type: 'Bistro',
+        far: '1610.5',
+        rate: 'yes'
     },
     {
         id: 6,
-        name: 'Service',
+        name: 'Lạp xưởng nướng đá',
         img: '../../public/services.png',
         itemName: 'cleaning on request',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$55',
-        far: '1610.7'
+        type: 'Bistro',
+        far: '1610.7',
+        rate: ''
     },
     {
         id: 7,
-        name: 'Product',
+        name: 'Tesax Chicken',
         img: '../../public/products.jpg',
         itemName: 'products on demand',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$75',
-        far: '1610.5'
+        type: 'Bistro',
+        far: '1610.5',
+        rate: ''
     },
     {
         id: 8,
-        name: 'Product',
+        name: 'Bánh bao',
         img: '../../public/products.jpg',
         itemName: 'products on demand',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$374',
-        far: '1610.7'
+        type: 'Bistro',
+        far: '1610.7',
+        rate: 'yes'
     },
     {
         id:9,
-        name: 'Service',
+        name: 'Nước giải khát Nước giải khát Nước giải khát Nước giải khát',
         img: '../../public/services.png',
         itemName: 'cleaning on request',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$175',
-        far: '1610.5'
+        type: 'Bistro',
+        far: '1610.5',
+        rate: 'yes'
     },
     {
         id:10,
-        name: 'Service',
+        name: 'Bánh kem',
         img: '../../public/services.png',
         itemName: 'cleaning on request',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$575',
-        far: '1610.7'
+        type: 'Bistro',
+        far: '1610.7',
+        rate: ''
     },
-    {
-        id:11,
-        name: 'Service',
-        img: '../../public/services.png',
-        itemName: 'cleaning on request',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$5',
-        far: '1610.5'
-    },
-    {
-        id:12,
-        name: 'Product',
-        img: '../../public/products.jpg',
-        itemName: 'products on demand',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$75',
-        far: '1610.7'
-    },
-    {
-        id:13,
-        name: 'Service',
-        img: '../../public/services.png',
-        itemName: 'cleaning on request',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$21',
-        far: '1610.5'
-    },
-    {
-        id:14,
-        name: 'Product',
-        img: '../../public/products.jpg',
-        itemName: 'products on demand',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$5',
-        far: '1610.7'
-    },
-    {
-        id:15,
-        name: 'Service',
-        img: '../../public/services.png',
-        itemName: 'cleaning on request',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$16',
-        far: '1610.5'
-    },
-    {
-        id:16,
-        name: 'Product',
-        img: '../../public/products.jpg',
-        itemName: 'products on demand',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-        price: '$555',
-        far: '1610.7'
-    }
 ]
 
 export default listItems;
