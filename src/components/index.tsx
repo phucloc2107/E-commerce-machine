@@ -1,7 +1,7 @@
 import Header from "./Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronRight, faStarOfDavid, faTag } from "@fortawesome/free-solid-svg-icons";
-import listItems from '../assets/data';
+import { faChevronDown, faChevronRight, faComment, faEye, faHeart, faShare } from "@fortawesome/free-solid-svg-icons";
+import listItems from "../assets/display1/quan_ngon_quan_5.json";
 import { useState } from "react";
 
 const categories = [
@@ -18,8 +18,14 @@ const Onboarding = () => {
 
     const [selectedCategory, setSelectedCategory] = useState("Deal hôm nay"); // Default selection
 
+    const formatNumber = (num: number) => {
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+        if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+        return num;
+      };
+
     return(
-        <div className="w-full h-full">
+        <div className="w-full min-h-screen">
             <Header />
             
             <div className="h-full w-full bg-gray-300 flex flex-col px-5 border border-gray-400">
@@ -44,25 +50,38 @@ const Onboarding = () => {
                 </div>
 
                 <div className="flex-grow border border-x-gray-400 p-5 overflow-y-auto">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
-                        {listItems.map((item) => (
-                            <div key={item.id} className="bg-white rounded-lg shadow-md">
-                                <img src={item.img} alt={item.name} className="w-full h-48 object-cover rounded-t-lg" />
-                                <div className="border-b border-gray-300 flex flex-col justify-center p-2 mb-2">
-                                    <div className="flex flex-row items-center">
-                                        {item.rate === "yes" && (
-                                            <FontAwesomeIcon icon={faStarOfDavid} className="w-6 h-6 mr-1 text-yellow-500" />
-                                        )}
-                                        <p className="text-xl font-bold truncate w-full">{item.name}</p>
-                                    </div>
-                                    <p className="text-gray-400 font-bold truncate w-full my-1">{item.description}</p>
-                                </div>
-                                <div className="ml-2 mt-3 mb-14 flex flex-row items-center">
-                                    <FontAwesomeIcon icon={faTag} className="text-red-500 mr-2" />
-                                    <p className="text-black font-bold">{item.type}</p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5">
+                    {listItems.map((item) => (
+                        <div key={item.frames[0]} className="bg-white rounded-lg shadow-md">
+                            <img src={item.frames[0]} alt='' className="w-full h-48 object-cover rounded-t-lg" />
+                            <p className="-mt-8 ml-1 py-1 text-white bg-gray-700 w-[13%] text-sm text-center">
+                                <FontAwesomeIcon icon={faEye} className="mr-1" />
+                                {formatNumber(item.views)}
+                            </p>
+                            <div className="border-b border-gray-300 flex flex-col justify-center p-2 mb-2">
+                                <p className="text-xl font-bold truncate w-full">{item.eat_name}</p>
+                                <p className="text-gray-400 font-bold truncate w-full my-1">{item.eat_addr}</p>
+                                <p className="text-gray-400 font-bold truncate w-full my-1">{item.open_time}</p>
+                                <div className="flex flex-row justify-between">
+                                    <p>
+                                        <FontAwesomeIcon icon={faHeart} className="mr-1 text-red-500" />
+                                        {formatNumber(item.likes)}
+                                    </p>
+                                    <p>
+                                        <FontAwesomeIcon icon={faComment} className="mr-1 text-blue-500" />
+                                        {formatNumber(item.comments)}
+                                    </p>
+                                    <p>
+                                        <FontAwesomeIcon icon={faShare} className="mr-1 text-green-500" />
+                                        {formatNumber(item.shares)}
+                                    </p>
                                 </div>
                             </div>
-                        ))}
+                            <div className="ml-2 my-3 flex flex-row items-center">
+                                <p className="text-gray-400 font-bold">By: {item.channel.name}</p>
+                            </div>
+                        </div>
+                    ))}
                     </div>
                 </div>
                 <FontAwesomeIcon icon={faChevronRight} className="absolute right-[1.2%] top-1/2 text-3xl text-gray-400" />

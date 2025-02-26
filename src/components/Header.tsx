@@ -6,7 +6,7 @@ import { faBars, faBell, faGlobe, faMobileScreen, faPlus } from "@fortawesome/fr
 const Header = () => {
 
     return (
-        <div className="bg-white h-20 flex justify-between items-center px-5">
+        <div className="bg-white h-16 flex justify-between items-center px-5">
             {/* Nav place left */}
             <div className="flex items-center">
                 {/* Logo */}            
