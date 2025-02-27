@@ -1,6 +1,6 @@
 import Header from "./Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp, faComment, faHeart, faShare, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp, faComment, faCommentSlash, faHeart, faShare, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import listItems from "../assets/display1/quan_ngon_quan_5.json";
 import { useState } from "react";
 
@@ -32,7 +32,7 @@ const Onboarding = () => {
     const [commentsOpen, setCommentsOpen] = useState<{ [key: string]: boolean }>({});
     const [commentsVisibility, setCommentsVisibility] = useState<{ [key: string]: number }>({});
     const [loadingComments, setLoadingComments] = useState<{ [key: string]: boolean }>({});
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndexes, setCurrentIndexes] = useState<{ [key: string]: number }>({});
 
     const formatNumber = (num: number) => {
         if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
@@ -68,7 +68,7 @@ const Onboarding = () => {
             setCommentsVisibility((prev) => ({ ...prev, [id]: 2 }));
             return;
         }
-        
+
         setLoadingComments((prev) => ({ ...prev, [id]: true }));
     
         setTimeout(() => {
@@ -117,11 +117,14 @@ const Onboarding = () => {
 
                             return (
                                 <div key={item.frames[0]} className="bg-white rounded-3xl shadow-md p-3">
-                                    <p className="text-xl font-bold truncate w-full">Tên quán: {item.eat_name}</p>
+                                    <p className="text-xl font-bold truncate w-full">{item.eat_name}</p>
                                     <p className="text-gray-400 font-bold truncate w-full my-1">Địa chỉ: {item.eat_addr}</p>
                                     {/* <img src={item.frames[0]} alt="" className="w-full h-48 object-cover rounded-t-lg" /> */}
                                     <div className="relative w-full overflow-hidden">
-                                        <div className="flex transition-transform duration-300" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+                                        <div 
+                                            className="flex transition-transform duration-300" 
+                                            style={{ transform: `translateX(-${(currentIndexes[item.frames[0]] || 0) * 100}%)` }}
+                                        >
                                             {item.frames.map((frame, index) => (
                                                 <img 
                                                     key={index} 
@@ -136,8 +139,8 @@ const Onboarding = () => {
                                             {item.frames.map((_, index) => (
                                                 <span 
                                                     key={index} 
-                                                    className={`w-2 h-2 rounded-full ${currentIndex === index ? 'bg-gray-800' : 'bg-gray-400'}`} 
-                                                    onClick={() => setCurrentIndex(index)}
+                                                    className={`w-2 h-2 rounded-full ${currentIndexes[item.frames[0]] === index ? 'bg-gray-800' : 'bg-gray-400'}`} 
+                                                    onClick={() => setCurrentIndexes((prev) => ({ ...prev, [item.frames[0]]: index }))}
                                                 ></span>
                                             ))}
                                         </div>
@@ -183,13 +186,11 @@ const Onboarding = () => {
                                                             </>
                                                         ) : visibleComments >= commentsList.length ? (
                                                             <>
-                                                                <FontAwesomeIcon icon={faChevronUp} className="mr-1" />
-                                                                <span>Ẩn bớt</span>
+                                                                <FontAwesomeIcon icon={faCommentSlash} />
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <FontAwesomeIcon icon={faChevronDown} className="mr-1" />
-                                                                <span>Hiển thị thêm</span>
+                                                                <FontAwesomeIcon icon={faComment}/>
                                                             </>
                                                         )}
                                                     </button>
