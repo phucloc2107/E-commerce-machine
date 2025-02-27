@@ -1,17 +1,13 @@
 import Header from "./Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp, faComment, faCommentSlash, faHeart, faShare, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faComment, faCommentSlash, faHeart, faShare, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import listItems from "../assets/display1/quan_ngon_quan_5.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const categories = [
-    { id: 1, name: "Deal hôm nay" },
-    { id: 2, name: "Tất cả" },
-    { id: 3, name: "Đồ ăn" },
-    { id: 4, name: "Đồ uống" },
-    { id: 5, name: "Đồ chay" },
-    { id: 6, name: "Bánh kem" },
-    { id: 7, name: "Tráng miệng" },
+    { id: 1, name: "Q.11" },
+    { id: 2, name: "Q.5" },
+    { id: 3, name: "Q.TB" },
 ];
 
 const fakeComments = [
@@ -28,11 +24,23 @@ const fakeComments = [
 ];
 
 const Onboarding = () => {
-    const [selectedCategory, setSelectedCategory] = useState("Deal hôm nay");
+    const [selectedCategory, setSelectedCategory] = useState("Q.11");
     const [commentsOpen, setCommentsOpen] = useState<{ [key: string]: boolean }>({});
     const [commentsVisibility, setCommentsVisibility] = useState<{ [key: string]: number }>({});
     const [loadingComments, setLoadingComments] = useState<{ [key: string]: boolean }>({});
     const [currentIndexes, setCurrentIndexes] = useState<{ [key: string]: number }>({});
+
+    useEffect(() => {
+        // Khi component mount, đặt tất cả hình ảnh về index đầu tiên (0)
+        const initialIndexes: { [key: string]: number } = {};
+        listItems.forEach((item) => {
+            if (item.frames.length > 0) {
+                initialIndexes[item.frames[0]] = 0;
+            }
+        });
+        setCurrentIndexes(initialIndexes);
+    }, []);
+
 
     const formatNumber = (num: number) => {
         if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
@@ -153,20 +161,10 @@ const Onboarding = () => {
                                         {/* <p className="text-xl font-bold truncate w-full">{item.eat_name}</p>
                                         <p className="text-gray-400 font-bold truncate w-full my-1">{item.eat_addr}</p> */}
                                         {/* <p className="text-gray-400 font-bold truncate w-full my-1">{item.open_time}</p> */}
-                                        <div className="flex flex-row justify-between">
-                                            <p>
-                                                <FontAwesomeIcon icon={faHeart} className="mr-1 text-red-500" />
-                                                {formatNumber(item.likes)}
-                                            </p>
-                                            <p className="cursor-pointer" onClick={() => toggleComments(item.frames[0], commentsList.length)}>
-                                                <FontAwesomeIcon icon={faComment} className="mr-1 text-blue-500" />
-                                                {formatNumber(item.comments)}
-                                            </p>
-                                            <p>
-                                                <FontAwesomeIcon icon={faShare} className="mr-1 text-green-500" />
-                                                {formatNumber(item.shares)}
-                                            </p>
-                                        </div>
+                                        <p className="cursor-pointer" onClick={() => toggleComments(item.frames[0], commentsList.length)}>
+                                            <FontAwesomeIcon icon={faComment} className="mr-1 text-blue-500" />
+                                            {formatNumber(item.comments)}
+                                        </p>
                                         {commentsOpen[item.frames[0]] && (
                                             <div className="mt-2 pt-2 border-t">
                                                 {commentsList.slice(0, visibleComments).map((comment, index) => (
