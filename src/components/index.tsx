@@ -1,6 +1,6 @@
 import Header from "./Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronRight, faComment, faEye, faHeart, faShare } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faComment, faEye, faHeart, faShare } from "@fortawesome/free-solid-svg-icons";
 import listItems from "../assets/display1/quan_ngon_quan_5.json";
 import { useState } from "react";
 
@@ -14,25 +14,41 @@ const categories = [
     { id: 7, name: "Tráng miệng" },
 ];
 
-const Onboarding = () => {
+const fakeComments = [
+    "Món ăn rất ngon!",
+    "Phục vụ chu đáo!",
+    "Không gian đẹp.",
+    "Sẽ quay lại lần sau!",
+    "Giá cả hợp lý!",
+    "Nên thử món đặc biệt của quán!",
+    "Món ăn đúng chuẩn vị!",
+    "Không gian ấm cúng, thích hợp đi cùng gia đình.",
+    "Quán đông nhưng phục vụ nhanh chóng.",
+    "Đồ ăn trình bày đẹp, rất hấp dẫn!"
+];
 
+const Onboarding = () => {
     const [selectedCategory, setSelectedCategory] = useState("Deal hôm nay");
-    const [showComments, setShowComments] = useState<{ [key: string]: boolean }>({});
+    const [commentsVisibility, setCommentsVisibility] = useState<{ [key: string]: number }>({});
 
     const formatNumber = (num: number) => {
         if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
         if (num >= 1000) return (num / 1000).toFixed(1) + "K";
         return num;
-      };
-
-    const toggleComments = (id: string) => {
-        setShowComments((prev) => ({ ...prev, [id]: !prev[id] }));
     };
 
-    return(
+    const toggleComments = (id: string, totalComments: number) => {
+        setCommentsVisibility((prev) => {
+            const currentCount = prev[id] || 0;
+            const newCount = currentCount === 0 ? 2 : Math.min(currentCount + 2, totalComments);
+            return { ...prev, [id]: newCount };
+        });
+    };
+
+    return (
         <div className="w-full min-h-screen">
             <Header />
-            
+
             <div className="h-full w-full bg-gray-300 flex flex-col px-5 border border-gray-400">
                 <div className="bg-white h-20 border border-x-gray-400 px-5 py-2 flex flex-row items-center">
                     <img src="/logo.svg" className="w-10 h-10" />
@@ -50,54 +66,68 @@ const Onboarding = () => {
                     ))}
                     <span className="flex flex-row items-baseline">
                         <p className="text-xl mr-1">Xem thêm</p>
-                        <FontAwesomeIcon icon={faChevronDown} style={{fontSize:12}} />
+                        <FontAwesomeIcon icon={faChevronDown} style={{ fontSize: 12 }} />
                     </span>
                 </div>
 
                 <div className="flex-grow border border-x-gray-400 p-5 overflow-y-auto">
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5">
-                    {listItems.map((item) => (
-                        <div key={item.frames[0]} className="bg-white rounded-lg shadow-md">
-                            <img src={item.frames[0]} alt='' className="w-full h-48 object-cover rounded-t-lg" />
-                            <p className="-mt-8 ml-1 py-1 text-white bg-gray-700 w-[13%] text-sm text-center">
-                                <FontAwesomeIcon icon={faEye} className="mr-1" />
-                                {formatNumber(item.views)}
-                            </p>
-                            <div className="border-b border-gray-300 flex flex-col justify-center p-2 mb-2">
-                                <p className="text-xl font-bold truncate w-full">{item.eat_name}</p>
-                                <p className="text-gray-400 font-bold truncate w-full my-1">{item.eat_addr}</p>
-                                <p className="text-gray-400 font-bold truncate w-full my-1">{item.open_time}</p>
-                                <div className="flex flex-row justify-between">
-                                    <p>
-                                        <FontAwesomeIcon icon={faHeart} className="mr-1 text-red-500" />
-                                        {formatNumber(item.likes)}
+                        {listItems.map((item) => {
+                            const commentsList = fakeComments.slice(0, item.comments || 2); // Chỉ sử dụng fakeComments
+                            const visibleComments = commentsVisibility[item.frames[0]] || 0;
+
+                            return (
+                                <div key={item.frames[0]} className="bg-white rounded-lg shadow-md">
+                                    <img src={item.frames[0]} alt="" className="w-full h-48 object-cover rounded-t-lg" />
+                                    <p className="-mt-8 ml-1 py-1 text-white bg-gray-700 w-[13%] text-sm text-center">
+                                        <FontAwesomeIcon icon={faEye} className="mr-1" />
+                                        {formatNumber(item.views)}
                                     </p>
-                                    <p className="cursor-pointer" onClick={() => toggleComments(item.frames[0])}>
-                                        <FontAwesomeIcon icon={faComment} className="mr-1 text-blue-500" />
-                                        {formatNumber(item.comments)}
-                                    </p>
-                                    <p>
-                                        <FontAwesomeIcon icon={faShare} className="mr-1 text-green-500" />
-                                        {formatNumber(item.shares)}
-                                    </p>
-                                </div>
-                                {showComments[item.frames[0]] && (
-                                        <div className="mt-2 pt-2 border-t">
-                                            <p className="text-gray-600">"Comment 1: Món ăn rất ngon!"</p>
-                                            <p className="text-gray-600">"Comment 2: Quán phục vụ rất tốt!"</p>
+                                    <div className="border-b border-gray-300 flex flex-col justify-center p-2 mb-2">
+                                        <p className="text-xl font-bold truncate w-full">{item.eat_name}</p>
+                                        <p className="text-gray-400 font-bold truncate w-full my-1">{item.eat_addr}</p>
+                                        <p className="text-gray-400 font-bold truncate w-full my-1">{item.open_time}</p>
+                                        <div className="flex flex-row justify-between">
+                                            <p>
+                                                <FontAwesomeIcon icon={faHeart} className="mr-1 text-red-500" />
+                                                {formatNumber(item.likes)}
+                                            </p>
+                                            <p className="cursor-pointer" onClick={() => toggleComments(item.frames[0], commentsList.length)}>
+                                                <FontAwesomeIcon icon={faComment} className="mr-1 text-blue-500" />
+                                                {formatNumber(item.comments)}
+                                            </p>
+                                            <p>
+                                                <FontAwesomeIcon icon={faShare} className="mr-1 text-green-500" />
+                                                {formatNumber(item.shares)}
+                                            </p>
                                         </div>
-                                )}
-                            </div>
-                            <div className="ml-2 my-3 flex flex-row items-center">
-                                <p className="text-gray-400 font-bold">By: {item.channel.name}</p>
-                            </div>
-                        </div>
-                    ))}
+                                        {visibleComments > 0 && (
+                                            <div className="mt-2 pt-2 border-t">
+                                                {commentsList.slice(0, visibleComments).map((comment, index) => (
+                                                    <p key={index} className="text-gray-600">{comment}</p>
+                                                ))}
+                                                {visibleComments < commentsList.length && (
+                                                    <button
+                                                        onClick={() => toggleComments(item.frames[0], commentsList.length)}
+                                                        className="mt-2 px-4 py-1 bg-blue-500 text-white rounded"
+                                                    >
+                                                        Hiển thị thêm
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="ml-2 my-3 flex flex-row items-center">
+                                        <p className="text-gray-400 font-bold">By: {item.channel.name}</p>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Onboarding;
