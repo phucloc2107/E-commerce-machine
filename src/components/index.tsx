@@ -16,13 +16,18 @@ const categories = [
 
 const Onboarding = () => {
 
-    const [selectedCategory, setSelectedCategory] = useState("Deal hôm nay"); // Default selection
+    const [selectedCategory, setSelectedCategory] = useState("Deal hôm nay");
+    const [showComments, setShowComments] = useState<{ [key: string]: boolean }>({});
 
     const formatNumber = (num: number) => {
         if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
         if (num >= 1000) return (num / 1000).toFixed(1) + "K";
         return num;
       };
+
+    const toggleComments = (id: string) => {
+        setShowComments((prev) => ({ ...prev, [id]: !prev[id] }));
+    };
 
     return(
         <div className="w-full min-h-screen">
@@ -67,7 +72,7 @@ const Onboarding = () => {
                                         <FontAwesomeIcon icon={faHeart} className="mr-1 text-red-500" />
                                         {formatNumber(item.likes)}
                                     </p>
-                                    <p>
+                                    <p className="cursor-pointer" onClick={() => toggleComments(item.frames[0])}>
                                         <FontAwesomeIcon icon={faComment} className="mr-1 text-blue-500" />
                                         {formatNumber(item.comments)}
                                     </p>
@@ -76,6 +81,12 @@ const Onboarding = () => {
                                         {formatNumber(item.shares)}
                                     </p>
                                 </div>
+                                {showComments[item.frames[0]] && (
+                                        <div className="mt-2 pt-2 border-t">
+                                            <p className="text-gray-600">"Comment 1: Món ăn rất ngon!"</p>
+                                            <p className="text-gray-600">"Comment 2: Quán phục vụ rất tốt!"</p>
+                                        </div>
+                                )}
                             </div>
                             <div className="ml-2 my-3 flex flex-row items-center">
                                 <p className="text-gray-400 font-bold">By: {item.channel.name}</p>
@@ -84,8 +95,6 @@ const Onboarding = () => {
                     ))}
                     </div>
                 </div>
-                <FontAwesomeIcon icon={faChevronRight} className="absolute right-[1.2%] top-1/2 text-3xl text-gray-400" />
-
             </div>
         </div>
     )
