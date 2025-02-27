@@ -1,6 +1,6 @@
 import Header from "./Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faComment, faHeart, faShare } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp, faComment, faHeart, faShare, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import listItems from "../assets/display1/quan_ngon_quan_5.json";
 import { useState } from "react";
 
@@ -31,6 +31,8 @@ const Onboarding = () => {
     const [selectedCategory, setSelectedCategory] = useState("Deal hôm nay");
     const [commentsOpen, setCommentsOpen] = useState<{ [key: string]: boolean }>({});
     const [commentsVisibility, setCommentsVisibility] = useState<{ [key: string]: number }>({});
+    const [loadingComments, setLoadingComments] = useState<{ [key: string]: boolean }>({});
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     const formatNumber = (num: number) => {
         if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
@@ -59,14 +61,27 @@ const Onboarding = () => {
     };
     
     const loadMoreComments = (id: string, totalComments: number) => {
-        setCommentsVisibility((prev) => {
-            const currentVisible = prev[id] || 2; 
+        const currentVisible = commentsVisibility[id] || 2;
+        if (loadingComments[id]) return;
     
-            return {
-                ...prev,
-                [id]: currentVisible >= totalComments ? 2 : Math.min(currentVisible + 2, totalComments),
-            };
-        });
+        if (currentVisible >= totalComments) {
+            setCommentsVisibility((prev) => ({ ...prev, [id]: 2 }));
+            return;
+        }
+        
+        setLoadingComments((prev) => ({ ...prev, [id]: true }));
+    
+        setTimeout(() => {
+            setCommentsVisibility((prev) => {
+                const currentVisible = prev[id] || 2;
+                return {
+                    ...prev,
+                    [id]: currentVisible >= totalComments ? 2 : Math.min(currentVisible + 2, totalComments),
+                };
+            });
+    
+            setLoadingComments((prev) => ({ ...prev, [id]: false })); 
+        }, 1000);
     };
 
     return (
@@ -97,14 +112,36 @@ const Onboarding = () => {
                 <div className="flex-grow border border-x-gray-400 p-5 overflow-y-auto">
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5">
                         {listItems.map((item) => {
-                            const commentsList = fakeComments.slice(0, item.comments || 2); 
+                            const commentsList = fakeComments.slice(0, item.comments || 2);
                             const visibleComments = commentsVisibility[item.frames[0]] || 0;
 
                             return (
                                 <div key={item.frames[0]} className="bg-white rounded-3xl shadow-md p-3">
                                     <p className="text-xl font-bold truncate w-full">Tên quán: {item.eat_name}</p>
                                     <p className="text-gray-400 font-bold truncate w-full my-1">Địa chỉ: {item.eat_addr}</p>
-                                    <img src={item.frames[0]} alt="" className="w-full h-48 object-cover rounded-t-lg" />
+                                    {/* <img src={item.frames[0]} alt="" className="w-full h-48 object-cover rounded-t-lg" /> */}
+                                    <div className="relative w-full overflow-hidden">
+                                        <div className="flex transition-transform duration-300" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+                                            {item.frames.map((frame, index) => (
+                                                <img 
+                                                    key={index} 
+                                                    src={frame} 
+                                                    alt={`Ảnh ${index + 1}`} 
+                                                    className="w-full h-64 object-cover rounded-lg flex-shrink-0" 
+                                                />
+                                            ))}
+                                        </div>
+                                        
+                                        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                                            {item.frames.map((_, index) => (
+                                                <span 
+                                                    key={index} 
+                                                    className={`w-2 h-2 rounded-full ${currentIndex === index ? 'bg-gray-800' : 'bg-gray-400'}`} 
+                                                    onClick={() => setCurrentIndex(index)}
+                                                ></span>
+                                            ))}
+                                        </div>
+                                    </div>
                                         {/* <p className="-mt-8 ml-1 py-1 text-white bg-gray-700 w-[13%] text-sm text-center">
                                             <FontAwesomeIcon icon={faEye} className="mr-1" />
                                             {formatNumber(item.views)}
@@ -136,9 +173,25 @@ const Onboarding = () => {
                                                 {commentsList.length > 2 && (
                                                     <button
                                                         onClick={() => loadMoreComments(item.frames[0], commentsList.length)}
-                                                        className="mt-2 px-4 py-1 bg-blue-500 text-white rounded"
+                                                        className="mt-2 py-1 text-blue-500 rounded flex items-center"
+                                                        disabled={loadingComments[item.frames[0]]}
                                                     >
-                                                        {visibleComments >= commentsList.length ? "Ẩn bớt" : "Hiển thị thêm"}
+                                                        {loadingComments[item.frames[0]] ? (
+                                                            <>
+                                                                <FontAwesomeIcon icon={faSpinner} className="mr-1 animate-spin" />
+                                                                <span>Đang tải...</span>
+                                                            </>
+                                                        ) : visibleComments >= commentsList.length ? (
+                                                            <>
+                                                                <FontAwesomeIcon icon={faChevronUp} className="mr-1" />
+                                                                <span>Ẩn bớt</span>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <FontAwesomeIcon icon={faChevronDown} className="mr-1" />
+                                                                <span>Hiển thị thêm</span>
+                                                            </>
+                                                        )}
                                                     </button>
                                                 )}
                                             </div>
