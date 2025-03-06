@@ -30,13 +30,12 @@ const SearchPage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col items-center bg-gray-100 p-6">
+    <div className="h-screen w-full flex flex-col items-center bg-[rgb(244,245,240)] p-6">
       <div className="bg-white px-5 pt-2 flex flex-col justify-center">
         <h2 className="text-center text-2xl font-bold text-blue-600 mb-4">PDF Search Tool</h2>
         <p className="text-center text-gray-600 mb-6">Search for keywords in your PDF documents</p>
       </div>
 
-      {/* Kết quả tìm kiếm */}
       <div className={`w-full flex justify-between mt-10 ${filteredResults.length > 0 ? 'h-auto' : 'h-0'}`}>
         <div className="w-[48%]">
           {filteredResults.filter(pdf => pdf.id % 2 !== 0).map((pdf) => (
@@ -45,8 +44,8 @@ const SearchPage: React.FC = () => {
               onClick={() => setLeftSelectedPdf(pdf)}
               className="w-[90%] border rounded-lg shadow-md bg-gray-50 flex items-center mx-auto border-gray-500 cursor-pointer mb-4"
             >
-              <div className="w-1/12 h-12 flex justify-center items-center border border-r-black mr-5 p-2 py-7">
-                <FontAwesomeIcon icon={faFilePdf} className="w-10 h-10 object-cover" />
+              <div className="w-1/12 h-auto flex justify-center items-center border border-r-black mr-5 p-2">
+                <FontAwesomeIcon icon={faFilePdf} className="w-5 h-5 object-cover text-[rgb(120,56,121)]" />
               </div>
               <h3 className="text-sm font-semibold text-gray-800">{pdf.fileName}</h3>
             </div>
@@ -60,8 +59,8 @@ const SearchPage: React.FC = () => {
               onClick={() => setRightSelectedPdf(pdf)}
               className="w-[90%] border rounded-lg shadow-md bg-gray-50 flex items-center mx-auto border-gray-500 cursor-pointer mb-4"
             >
-              <div className="w-1/12 h-12 flex justify-center items-center border border-r-black mr-5 p-2 py-7">
-                <FontAwesomeIcon icon={faFilePdf} className="w-10 h-10 object-cover" />
+              <div className="w-1/12 h-auto flex justify-center items-center border border-r-black mr-5 p-2">
+                <FontAwesomeIcon icon={faFilePdf} className="w-5 h-5 object-cover text-[rgb(120,56,121)]" />
               </div>
               <h3 className="text-sm font-semibold text-gray-800">{pdf.fileName}</h3>
             </div>
@@ -69,7 +68,6 @@ const SearchPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Hiển thị nội dung PDF */}
       {filteredResults.length > 0 && (leftSelectedPdf || rightSelectedPdf) && (
         <div className="w-full h-96 mt-10 flex flex-row justify-between">
           <div className="w-[48%] h-full border-4 border-black rounded-3xl bg-white p-4">
@@ -98,8 +96,7 @@ const SearchPage: React.FC = () => {
         </div>
       )}
 
-      {/* Ô nhập từ khóa + nút tìm kiếm */}
-      <div className="bg-gray-200 w-1/2 h-20 mt-5 flex items-center justify-center p-4">
+      <div className="bg-gray-200 w-1/2 h-20 mt-5 flex items-center justify-center p-4 rounded-full">
         <div className="w-full">
           <input
             type="text"
