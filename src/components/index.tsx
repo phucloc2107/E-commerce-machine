@@ -1,6 +1,6 @@
 import Header from "./Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faComment, faCommentSlash, faHeart, faShare, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faComment, faCommentSlash, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import listItems from "../assets/display1/quan_ngon_quan_5.json";
 import { useEffect, useState } from "react";
 
@@ -31,7 +31,6 @@ const Onboarding = () => {
     const [currentIndexes, setCurrentIndexes] = useState<{ [key: string]: number }>({});
 
     useEffect(() => {
-        // Khi component mount, đặt tất cả hình ảnh về index đầu tiên (0)
         const initialIndexes: { [key: string]: number } = {};
         listItems.forEach((item) => {
             if (item.frames.length > 0) {
@@ -153,14 +152,8 @@ const Onboarding = () => {
                                             ))}
                                         </div>
                                     </div>
-                                        {/* <p className="-mt-8 ml-1 py-1 text-white bg-gray-700 w-[13%] text-sm text-center">
-                                            <FontAwesomeIcon icon={faEye} className="mr-1" />
-                                            {formatNumber(item.views)}
-                                        </p> */}
+            
                                     <div className="flex flex-col justify-center py-2 mb-2">
-                                        {/* <p className="text-xl font-bold truncate w-full">{item.eat_name}</p>
-                                        <p className="text-gray-400 font-bold truncate w-full my-1">{item.eat_addr}</p> */}
-                                        {/* <p className="text-gray-400 font-bold truncate w-full my-1">{item.open_time}</p> */}
                                         <p className="cursor-pointer" onClick={() => toggleComments(item.frames[0], commentsList.length)}>
                                             <FontAwesomeIcon icon={faComment} className="mr-1 text-blue-500" />
                                             {formatNumber(item.comments)}
@@ -196,9 +189,6 @@ const Onboarding = () => {
                                             </div>
                                         )}
                                     </div>
-                                    {/* <div className="ml-2 my-3 flex flex-row items-center">
-                                        <p className="text-gray-400 font-bold">By: {item.channel.name}</p>
-                                    </div> */}
                                 </div>
                             );
                         })}
