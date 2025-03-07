@@ -5,8 +5,20 @@
 @tailwind utilities;
 
 :root {
-    background-color: white;
-}
+    --primary-color: #6b46fe;
+    --primary-light: #8467ff;
+    --primary-dark: #5535d4;
+    --secondary-color: #718096;
+    --background-color: #ffffff;
+    --card-background: #ffffff;
+    --text-color: #1a202c;
+    --text-light: #4a5568;
+    --border-color: #e2e8f0;
+    --success-color: #38a169;
+    --error-color: #e53e3e;
+    --highlight-color: rgba(107, 70, 254, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.05);
+  }
 
 .ant-popover-arrow {
     display: none !important;

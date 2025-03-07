@@ -1,122 +1,127 @@
-import React, { useState } from "react";
-import dummySearchResults from "../assets/dummyData";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilePdf, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from 'react';
+import dummySearchResults from '../assets/dummyData';
+import { useNavigate } from "react-router-dom";
+
+interface SearchResult {
+  id: number;
+  fileName: string;
+  matchedText?: string;
+}
 
 const SearchPage: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredResults, setFilteredResults] = useState<typeof dummySearchResults>([]);
-  const [leftSelectedPdf, setLeftSelectedPdf] = useState<typeof dummySearchResults[0] | null>(null);
-  const [rightSelectedPdf, setRightSelectedPdf] = useState<typeof dummySearchResults[0] | null>(null);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [keyword, setKeyword] = useState<string>('');
+  const navigate = useNavigate();
 
-  const handleSearch = () => {
-    if (searchTerm.trim() === "") {
-      setFilteredResults([]);
-      setLeftSelectedPdf(null);
-      setRightSelectedPdf(null);
-      return;
+  const handleSearch = async (keyword: string) => {
+    if (!keyword.trim()) return;
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      setTimeout(() => {
+        const filteredResults = dummySearchResults.filter(
+          result => 
+            result.fileName.toLowerCase().includes(keyword.toLowerCase()) || 
+            (result.matchedText && result.matchedText.toLowerCase().includes(keyword.toLowerCase()))
+        );
+        setSearchResults(filteredResults);
+        setIsLoading(false);
+      }, 800);
+    } catch (err) {
+      console.error('Error searching PDFs:', err);
+      setError('Failed to search PDFs. Please try again.');
+      setSearchResults([]);
+      setIsLoading(false);
     }
-
-    const results = dummySearchResults.filter((pdf) =>
-      pdf.fileName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredResults(results);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
+/*   const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (keyword.trim()) {
+      handleSearch(keyword);
+      navigate("/result", { state: { keyword } }); // Truyền keyword qua state
+    }
+  }; */
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (keyword.trim()) {
+      handleSearch(keyword);
+      navigate(`/result?search=${encodeURIComponent(keyword)}`); // Chuyển hướng với keyword
     }
   };
 
   return (
-    <div className="h-screen w-full flex flex-col items-center bg-[rgb(244,245,240)] p-6">
-      <div className="bg-white px-5 pt-2 flex flex-col justify-center">
-        <h2 className="text-center text-2xl font-bold text-blue-600 mb-4">PDF Search Tool</h2>
-        <p className="text-center text-gray-600 mb-6">Search for keywords in your PDF documents</p>
-      </div>
-
-      <div className={`w-full flex justify-between mt-10 ${filteredResults.length > 0 ? 'h-auto' : 'h-0'}`}>
-        <div className="w-[48%]">
-          {filteredResults.filter(pdf => pdf.id % 2 !== 0).map((pdf) => (
-            <div
-              key={pdf.id}
-              onClick={() => setLeftSelectedPdf(pdf)}
-              className="w-[90%] border rounded-lg shadow-md bg-gray-50 flex items-center mx-auto border-gray-500 cursor-pointer mb-4"
-            >
-              <div className="w-1/12 h-auto flex justify-center items-center border border-r-black mr-5 p-2">
-                <FontAwesomeIcon icon={faFilePdf} className="w-5 h-5 object-cover text-[rgb(120,56,121)]" />
-              </div>
-              <h3 className="text-sm font-semibold text-gray-800">{pdf.fileName}</h3>
+    <div className="max-w-4xl mx-auto p-6 min-h-screen flex flex-col">
+      <header className="text-center mb-8 flex flex-col items-center">
+        <div className="mb-4 w-16 h-16 rounded-lg flex items-center justify-center"
+          style={{ backgroundColor: 'var(--highlight-color)', color: 'var(--primary-color)' }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <h1 className="text-3xl font-bold" style={{ color: 'var(--primary-color)' }}>PDF Search Tool</h1>
+        <p className="text-lg text-[var(--text-light)] max-w-lg">Find information across your PDF documents instantly</p>
+      </header>
+      
+      <main className="flex-1">
+        <div className="mb-6">
+          <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
+            <div className="flex shadow-lg rounded-lg overflow-hidden border border-[var(--border-color)] bg-white focus-within:ring-2 focus-within:ring-[var(--primary-color)]">
+              <input
+                type="text"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                placeholder="Enter keyword to search in PDFs..."
+                className="flex-1 p-3 text-lg outline-none"
+                aria-label="Search PDFs"
+              />
+              <button
+                type="submit"
+                className={`px-5 py-3 font-semibold transition text-white ${
+                  !keyword.trim() ? 'bg-gray-400 cursor-not-allowed' : 'bg-[var(--primary-color)]'
+                }`}
+                disabled={!keyword.trim()}
+              >
+                🔍 Search
+              </button>
             </div>
-          ))}
+          </form>
         </div>
 
-        <div className="w-[48%]">
-          {filteredResults.filter(pdf => pdf.id % 2 === 0).map((pdf) => (
-            <div
-              key={pdf.id}
-              onClick={() => setRightSelectedPdf(pdf)}
-              className="w-[90%] border rounded-lg shadow-md bg-gray-50 flex items-center mx-auto border-gray-500 cursor-pointer mb-4"
-            >
-              <div className="w-1/12 h-auto flex justify-center items-center border border-r-black mr-5 p-2">
-                <FontAwesomeIcon icon={faFilePdf} className="w-5 h-5 object-cover text-[rgb(120,56,121)]" />
-              </div>
-              <h3 className="text-sm font-semibold text-gray-800">{pdf.fileName}</h3>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {filteredResults.length > 0 && (leftSelectedPdf || rightSelectedPdf) && (
-        <div className="w-full h-96 mt-10 flex flex-row justify-between">
-          <div className="w-[48%] h-full border-4 border-black rounded-3xl bg-white p-4">
-            <h3 className="text-lg font-semibold">Left Panel (Odd ID)</h3>
-            {leftSelectedPdf ? (
-              <>
-                <p className="text-blue-600 font-bold">{leftSelectedPdf.fileName}</p>
-                <p className="text-gray-700 mt-2">{leftSelectedPdf.matchedText}</p>
-              </>
-            ) : (
-              <p className="text-gray-500">Click on an odd ID file to view content here</p>
-            )}
+        {isLoading && (
+          <div className="flex flex-col items-center justify-center my-6">
+            <div className="w-12 h-12 border-4 border-[var(--primary-light)] border-t-[var(--primary-color)] rounded-full animate-spin mb-4"></div>
+            <p>Searching PDFs...</p>
           </div>
+        )}
 
-          <div className="w-[48%] h-full border-4 border-black rounded-3xl bg-white p-4">
-            <h3 className="text-lg font-semibold">Right Panel (Even ID)</h3>
-            {rightSelectedPdf ? (
-              <>
-                <p className="text-blue-600 font-bold">{rightSelectedPdf.fileName}</p>
-                <p className="text-gray-700 mt-2">{rightSelectedPdf.matchedText}</p>
-              </>
-            ) : (
-              <p className="text-gray-500">Click on an even ID file to view content here</p>
-            )}
+        {error && <div className="bg-red-100 text-red-600 p-4 rounded-lg text-center my-6">{error}</div>}
+        
+        {!isLoading && !error && searchResults.length === 0 && (
+          <div className="text-center my-6 p-6 bg-white rounded-lg shadow-md">
+            <p>No results found. Try a different keyword.</p>
           </div>
-        </div>
-      )}
-
-      <div className="bg-gray-200 w-1/2 h-20 mt-5 flex items-center justify-center p-4 rounded-full">
-        <div className="w-full">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="w-full p-3 pl-4 pr-20 text-gray-700 rounded-tl-full rounded-bl-full focus:outline-none"
-            placeholder="Enter keyword to search in PDFs..."
-          />
-        </div>
-        <div className="w-1/5">
-          <button
-            onClick={handleSearch}
-            className="bg-gray-500 text-white px-5 py-3 rounded-tr-full rounded-br-full font-bold"
-          >
-            <FontAwesomeIcon icon={faMagnifyingGlass} className="mr-2" />
-            Search
-          </button>
-        </div>
-      </div>
+        )}
+        
+        {!isLoading && !error && searchResults.length > 0 && (
+          <ul className="space-y-4">
+            {searchResults.map(result => (
+              <li key={result.id} className="p-4 border border-[var(--border-color)] rounded-lg shadow-sm">
+                <strong>{result.fileName}</strong>
+                {result.matchedText && <p className="text-[var(--text-light)]">{result.matchedText}</p>}
+              </li>
+            ))}
+          </ul>
+        )}
+      </main>
+      
+      <footer className="text-center mt-6 pt-4 border-t border-[var(--border-color)] text-[var(--text-light)]">
+        <p>&copy; {new Date().getFullYear()} PDF Search Tool</p>
+      </footer>
     </div>
   );
 };

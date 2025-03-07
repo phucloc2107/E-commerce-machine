@@ -40,7 +40,7 @@ const dummySearchResults = [
       fileSize: 5600000,
       lastModified: "2023-03-05T16:20:00Z"
     },
-    {
+ /*    {
       id: 5,
       fileName: "Node.js_Best_Practices.pdf",
       fileUrl: "/sample/Node.js_Best_Practices.pdf",
@@ -58,7 +58,7 @@ const dummySearchResults = [
       pageCount: 48,
       fileSize: 2800000,
       lastModified: "2023-02-28T10:30:00Z"
-    }
+    } */
   ];
   
   export default dummySearchResults; 
